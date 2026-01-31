@@ -59,13 +59,37 @@ export default function App() {
 
     setLoading(true);
     try {
+      // Convert images to base64 to ensure they render correctly in the PDF
+      const processedImages = await Promise.all(
+        images.map(async (img) => {
+          try {
+            const base64 = await FileSystem.readAsStringAsync(img.uri, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+            // Simple mime type detection
+            const mimeType = img.uri.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
+            return `data:${mimeType};base64,${base64}`;
+          } catch (e) {
+            console.warn('Failed to convert image to base64:', img.uri, e);
+            return null;
+          }
+        })
+      );
+
+      // Filter out any failed conversions
+      const validImages = processedImages.filter(img => img !== null);
+
+      if (validImages.length === 0) {
+        throw new Error('No valid images to generate PDF');
+      }
+
       // Create HTML content with images
       let htmlContent = `
         <html>
           <body style="margin: 0; padding: 0;">
-            ${images.map(img => `
+            ${validImages.map(src => `
               <div style="page-break-after: always; display: flex; justify-content: center; align-items: center; height: 100vh;">
-                <img src="${img.uri}" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+                <img src="${src}" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
               </div>
             `).join('')}
           </body>
