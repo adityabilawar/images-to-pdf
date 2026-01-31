@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  TouchableOpacity, 
-  FlatList, 
-  Image, 
-  SafeAreaView, 
-  Dimensions, 
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  SafeAreaView,
+  Dimensions,
   Alert,
   ActivityIndicator
 } from 'react-native';
@@ -21,6 +21,8 @@ import { Ionicons } from '@expo/vector-icons';
 const { width } = Dimensions.get('window');
 const COLUMN_COUNT = 3;
 const ITEM_WIDTH = (width - 40) / COLUMN_COUNT;
+// Replace with your actual Render backend URL
+const BACKEND_URL = 'https://docsnap-backend.onrender.com';
 
 export default function App() {
   const [images, setImages] = useState([]);
@@ -28,7 +30,7 @@ export default function App() {
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+
     if (status !== 'granted') {
       Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
       return;
@@ -87,8 +89,8 @@ export default function App() {
   const renderItem = ({ item }) => (
     <View style={styles.imageContainer}>
       <Image source={{ uri: item.uri }} style={styles.image} />
-      <TouchableOpacity 
-        style={styles.removeButton} 
+      <TouchableOpacity
+        style={styles.removeButton}
         onPress={() => removeImage(item.uri)}
       >
         <Ionicons name="close-circle" size={24} color="#FF6B6B" />
@@ -99,7 +101,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      
+
       <View style={styles.header}>
         <Text style={styles.title}>Image2PDF</Text>
         <Text style={styles.subtitle}>Convert Images to PDF instantly</Text>
@@ -125,8 +127,8 @@ export default function App() {
           <Text style={styles.buttonText}>Add Images</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={[styles.generateButton, images.length === 0 && styles.disabledButton]} 
+        <TouchableOpacity
+          style={[styles.generateButton, images.length === 0 && styles.disabledButton]}
           onPress={generatePDF}
           disabled={loading || images.length === 0}
         >
