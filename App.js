@@ -64,7 +64,7 @@ export default function App() {
         images.map(async (img) => {
           try {
             const base64 = await FileSystem.readAsStringAsync(img.uri, {
-              encoding: FileSystem.EncodingType.Base64,
+              encoding: 'base64',
             });
             // Simple mime type detection
             const mimeType = img.uri.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
