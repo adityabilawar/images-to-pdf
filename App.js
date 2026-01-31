@@ -101,7 +101,7 @@ export default function App() {
       <StatusBar style="light" />
       
       <View style={styles.header}>
-        <Text style={styles.title}>DocSnap</Text>
+        <Text style={styles.title}>Image2PDF</Text>
         <Text style={styles.subtitle}>Convert Images to PDF instantly</Text>
       </View>
 
